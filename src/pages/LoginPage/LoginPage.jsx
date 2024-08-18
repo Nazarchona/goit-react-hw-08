@@ -1,48 +1,51 @@
-// src/pages/LoginPage/LoginPage.jsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
-import { login } from '../../redux/auth/operations';
-import { Formik, Form, Field } from 'formik';
+import { login } from '../../redux/auth/authOperations';
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const handleSubmit = async (values) => {
-    try {
-      await dispatch(login(values));
-      navigate('/dashboard'); // Redirect to the dashboard after successful login
-    } catch (error) {
-      // Handle login error
-      console.error(error);
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      username: '',
+      password: '',
+    },
+    onSubmit: values => {
+      dispatch(login(values));
+    },
+  });
 
   return (
     <div>
-      <h1>Login</h1>
-      <Formik
-        initialValues={{ email: '', password: '' }}
-        onSubmit={handleSubmit}
-      >
-        <Form>
-          <div>
-            <label htmlFor="email">Email</label>
-            <Field id="email" name="email" type="email" />
-          </div>
-          <div>
-            <label htmlFor="password">Password</label>
-            <Field id="password" name="password" type="password" />
-          </div>
-          <button type="submit">Login</button>
-        </Form>
-      </Formik>
+      <h1>Login Page</h1>
+      <form onSubmit={formik.handleSubmit}>
+        <label>
+          Username:
+          <input
+            type="text"
+            name="username"
+            onChange={formik.handleChange}
+            value={formik.values.username}
+          />
+        </label>
+        <label>
+          Password:
+          <input
+            type="password"
+            name="password"
+            onChange={formik.handleChange}
+            value={formik.values.password}
+          />
+        </label>
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
 };
 
 export default LoginPage;
+
 
 
 

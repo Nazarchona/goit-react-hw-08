@@ -1,75 +1,51 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useFormik } from 'formik';
+import { useDispatch } from 'react-redux';
+import { register } from '../../redux/auth/authOperations';
 
 const RegistrationPage = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const dispatch = useDispatch();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    // Validate password length
-    if (password.length < 7) {
-      setError('Password must be at least 7 characters long.');
-      return;
-    }
-
-    const userData = { name, email, password };
-
-    try {
-      const response = await fetch('https://connections-api.goit.global/users/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json(); // Get error details
-        console.error('Error details:', errorData);
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log('User registered:', result);
-    } catch (error) {
-      console.error('Error:', error);
-      setError('Registration failed. Please try again.');
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      username: '',
+      password: '',
+    },
+    onSubmit: values => {
+      dispatch(register(values));
+    },
+  });
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Name"
-        required
-      />
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        required
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        required
-      />
-      <button type="submit">Register</button>
-      {error && <p>{error}</p>}
-    </form>
+    <div>
+      <h1>Registration Page</h1>
+      <form onSubmit={formik.handleSubmit}>
+        <label>
+          Username:
+          <input
+            type="text"
+            name="username"
+            onChange={formik.handleChange}
+            value={formik.values.username}
+          />
+        </label>
+        <label>
+          Password:
+          <input
+            type="password"
+            name="password"
+            onChange={formik.handleChange}
+            value={formik.values.password}
+          />
+        </label>
+        <button type="submit">Register</button>
+      </form>
+    </div>
   );
 };
 
 export default RegistrationPage;
+
 
 
 

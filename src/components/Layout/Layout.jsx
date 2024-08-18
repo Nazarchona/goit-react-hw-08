@@ -1,19 +1,19 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
 import AppBar from '../AppBar/AppBar';
-import styles from './Layout.module.css';
 
-const Layout = () => {
-  return (
-    <div className={styles.container}>
-      <AppBar />
-      <main className={styles.main}>
-        <Outlet />
-      </main>
-    </div>
-  );
-};
+const Layout = ({ children }) => (
+  <div>
+    <AppBar />
+    <main>
+      {children}
+    </main>
+  </div>
+);
 
 export default Layout;
+
+
+
+
 
 
