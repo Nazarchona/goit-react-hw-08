@@ -1,0 +1,34 @@
+.container {
+width: 360px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin-bottom: 50px;
+}
+
+.wrap {
+	display: flex;
+		flex-direction: column;
+}
+
+.label {
+	margin-bottom: 5px;
+}
+
+.Error {
+	color: red;
+}
+
+.field {
+height: 30px;
+border-radius: 6px;
+box-shadow: none;
+}
+
+.btn {
+	color: whitesmoke;
+	background-color: green;
+	border-radius: 6px;
+	padding: 10px;
+
+}

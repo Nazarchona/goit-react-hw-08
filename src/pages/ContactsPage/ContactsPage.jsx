@@ -1,47 +1,33 @@
-// Example: src/pages/ContactsPage/ContactsPage.jsx
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import PageTitle from '../../components/PageTitle/PageTitle';
+import ContactList from '../../components/ContactList/ContactList';
+import ContactForm from '../../components/ContactForm/ContactForm';
+import SearchBox from '../../components/SearchBox/SearchBox';
+import { fetchContacts } from '../../redux/contacts/operations';
+import {  selectLoading, selectError } from '../../redux/contacts/selectors';
+import Loader from '../../components/Loader/Loader';
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { selectToken } from '../../redux/auth/selectors'; // Update to your actual path
 
-const ContactsPage = () => {
-  const [contacts, setContacts] = useState([]);
-  const token = useSelector(selectToken);
+
+export default function ContactsPage() {
+  const dispatch = useDispatch();
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
 
   useEffect(() => {
-    const fetchContacts = async () => {
-      try {
-        const response = await fetch('https://connections-api.goit.global/contacts', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-
-        const result = await response.json();
-        setContacts(result);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchContacts();
-  }, [token]);
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <div>
-      {/* Render your contacts */}
+      <PageTitle>Your contacts</PageTitle>
+      <ContactForm />
+      <SearchBox />
+      {loading && <Loader/>}
+      {error && <ErrorMessage/>}
+      {!loading && !error && <ContactList />}
     </div>
   );
-};
-
-export default ContactsPage;
-
-
-
-
-
+}
